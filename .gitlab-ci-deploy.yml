@@ -1,0 +1,60 @@
+.deploy_script:
+  
+  before_script:
+    - echo "--- begin ---"
+    - mkdir -p /fbwork/public
+    
+  script:
+    - ls -l /builds/
+    - pwd # -> /builds/Artoria-Pendragon/firebase-ci
+    - ls -al
+      # __[result]
+      # drwxrwxrwx. 3 root root 4096 Aug 29 14:21 .
+      # drwxrwxrwx. 4 root root 4096 Aug 29 14:21 ..
+      # drwxrwxrwx. 6 root root 4096 Aug 29 14:21 .git
+      # -rw-rw-rw-. 1 root root  727 Aug 29 14:21 .gitlab-ci-deploy.yml
+      # -rw-rw-rw-. 1 root root  107 Aug 29 14:21 .gitlab-ci.yml
+      # -rw-rw-rw-. 1 root root   15 Aug 29 14:21 README.md
+      # drwxrwxrwx. 2 root root 4096 Aug 29 17:49 src
+    - cp -rf src /fbwork/public/
+    - cd /fbwork/public
+    - pwd
+    - ls -la
+    - cat src/test.html
+    - firebase --version
+    - echo "${FIREBASE_TOKEN}"
+    # - firebase use prod --token ${FIREBASE_TOKEN}
+    # - firebase deploy --only hosting \
+    #                   --non-interactive \
+    #                   --token ${FIREBASE_TOKEN} \
+    #                   --message "Pipeline ${CI_PIPELINE_ID}, build ${CI_JOB_ID}"
+    
+  after_script:
+    - cd /fbwork
+    - rm -rf /fbwork/public
+    - echo "--- end ---"
+
+
+.dev_deploy_script:
+  
+  before_script:
+    - echo "--- begin ---"
+    - mkdir -p /fbwork/public
+    
+  script:
+    - cp -rf src /fbwork/public/
+    - cd /fbwork/public
+    - cat src/test.html
+    - firebase --version
+    - echo "${FIREBASE_TOKEN}"
+    # - firebase use dev --token ${FIREBASE_TOKEN}
+    # - firebase deploy --only hosting \
+    #                   --non-interactive \
+    #                   --token ${FIREBASE_TOKEN} \
+    #                   --message "Pipeline ${CI_PIPELINE_ID}, build ${CI_JOB_ID}"
+    
+  after_script:
+    - cd /fbwork
+    - rm -rf /fbwork/public
+    - echo "--- end ---"
+    
